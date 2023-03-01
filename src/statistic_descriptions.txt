@@ -1,0 +1,271 @@
+FOF groups: ContaminationCount
+FOF groups: ContaminationMass, log
+FOF groups: FirstSubhaloID
+FOF groups: GroupCentreOfPotential
+FOF groups: GroupLength
+FOF groups: GroupMass, log
+FOF groups: GroupOffset
+FOF groups: Group_M_Crit200, log
+FOF groups: Group_M_Crit2500, log
+FOF groups: Group_M_Crit500, log
+FOF groups: Group_M_Mean200, log
+FOF groups: Group_M_Mean2500, log
+FOF groups: Group_M_Mean500, log
+FOF groups: Group_M_TopHat200, log
+FOF groups: Group_R_Crit200, log
+FOF groups: Group_R_Crit2500, log
+FOF groups: Group_R_Crit500, log
+FOF groups: Group_R_Mean200, log
+FOF groups: Group_R_Mean2500, log
+FOF groups: Group_R_Mean500, log
+FOF groups: Group_R_TopHat200, log
+FOF groups: NumOfSubhalos
+Subhalo: ApertureMeasurements/Mass/001kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/001kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/001kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/001kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/001kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/001kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/003kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/003kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/003kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/003kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/003kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/003kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/005kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/005kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/005kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/005kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/005kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/005kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/010kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/010kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/010kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/010kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/010kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/010kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/020kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/020kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/020kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/020kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/020kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/020kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/030kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/030kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/030kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/030kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/030kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/030kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/040kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/040kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/040kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/040kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/040kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/040kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/050kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/050kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/050kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/050kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/050kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/050kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/070kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/070kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/070kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/070kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/070kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/070kpc/PartType5, log
+Subhalo: ApertureMeasurements/Mass/100kpc/PartType0, log
+Subhalo: ApertureMeasurements/Mass/100kpc/PartType1, log
+Subhalo: ApertureMeasurements/Mass/100kpc/PartType2, log
+Subhalo: ApertureMeasurements/Mass/100kpc/PartType3, log
+Subhalo: ApertureMeasurements/Mass/100kpc/PartType4, log
+Subhalo: ApertureMeasurements/Mass/100kpc/PartType5, log
+Subhalo: ApertureMeasurements/SFR/001kpc
+Subhalo: ApertureMeasurements/SFR/003kpc
+Subhalo: ApertureMeasurements/SFR/005kpc
+Subhalo: ApertureMeasurements/SFR/010kpc
+Subhalo: ApertureMeasurements/SFR/020kpc
+Subhalo: ApertureMeasurements/SFR/030kpc
+Subhalo: ApertureMeasurements/SFR/040kpc
+Subhalo: ApertureMeasurements/SFR/050kpc
+Subhalo: ApertureMeasurements/SFR/070kpc
+Subhalo: ApertureMeasurements/SFR/100kpc
+Subhalo: ApertureMeasurements/VelDisp/001kpc
+Subhalo: ApertureMeasurements/VelDisp/003kpc
+Subhalo: ApertureMeasurements/VelDisp/005kpc
+Subhalo: ApertureMeasurements/VelDisp/010kpc
+Subhalo: ApertureMeasurements/VelDisp/020kpc
+Subhalo: ApertureMeasurements/VelDisp/030kpc
+Subhalo: ApertureMeasurements/VelDisp/040kpc
+Subhalo: ApertureMeasurements/VelDisp/050kpc
+Subhalo: ApertureMeasurements/VelDisp/070kpc
+Subhalo: ApertureMeasurements/VelDisp/100kpc
+Subhalo: BlackHoleMass, log
+Subhalo: BlackHoleMassAccretionRate, log
+Subhalo: CentreOfMass, log
+Subhalo: CentreOfPotential
+Subhalo: GasSpin
+Subhalo: GroupNumber
+Subhalo: HalfMassProjRad/PartType0, log
+Subhalo: HalfMassProjRad/PartType1, log
+Subhalo: HalfMassProjRad/PartType2, log
+Subhalo: HalfMassProjRad/PartType3, log
+Subhalo: HalfMassProjRad/PartType4, log
+Subhalo: HalfMassProjRad/PartType5, log
+Subhalo: HalfMassRad/PartType0, log
+Subhalo: HalfMassRad/PartType1, log
+Subhalo: HalfMassRad/PartType2, log
+Subhalo: HalfMassRad/PartType3, log
+Subhalo: HalfMassRad/PartType4, log
+Subhalo: HalfMassRad/PartType5, log
+Subhalo: IDMostBound
+Subhalo: InertiaTensor
+Subhalo: InitialMassWeightedBirthZ, log
+Subhalo: InitialMassWeightedStellarAge, log
+Subhalo: KineticEnergy
+Subhalo: Mass, log
+Subhalo: MassTwiceHalfMassRad/PartType0, log
+Subhalo: MassTwiceHalfMassRad/PartType1, log
+Subhalo: MassTwiceHalfMassRad/PartType2, log
+Subhalo: MassTwiceHalfMassRad/PartType3, log
+Subhalo: MassTwiceHalfMassRad/PartType4, log
+Subhalo: MassTwiceHalfMassRad/PartType5, log
+Subhalo: MassType/PartType0, log
+Subhalo: MassType/PartType1, log
+Subhalo: MassType/PartType2, log
+Subhalo: MassType/PartType3, log
+Subhalo: MassType/PartType4, log
+Subhalo: MassType/PartType5, log
+Subhalo: NSF/ElementAbundance/Carbon
+Subhalo: NSF/ElementAbundance/Helium
+Subhalo: NSF/ElementAbundance/Hydrogen
+Subhalo: NSF/ElementAbundance/Iron
+Subhalo: NSF/ElementAbundance/Magnesium
+Subhalo: NSF/ElementAbundance/Neon
+Subhalo: NSF/ElementAbundance/Nitrogen
+Subhalo: NSF/ElementAbundance/Oxygen
+Subhalo: NSF/ElementAbundance/Silicon
+Subhalo: NSF/IronFromSNIa
+Subhalo: NSF/IronFromSNIaSmoothed
+Subhalo: NSF/KineticEnergy
+Subhalo: NSF/Mass, log
+Subhalo: NSF/MassFromAGB, log
+Subhalo: NSF/MassFromSNII, log
+Subhalo: NSF/MassFromSNIa, log
+Subhalo: NSF/MassWeightedEntropy, log
+Subhalo: NSF/MassWeightedPotential
+Subhalo: NSF/MassWeightedTemperature, log
+Subhalo: NSF/Metallicity
+Subhalo: NSF/MetalsFromAGB
+Subhalo: NSF/MetalsFromSNII
+Subhalo: NSF/MetalsFromSNIa
+Subhalo: NSF/SmoothedElementAbundance/Carbon
+Subhalo: NSF/SmoothedElementAbundance/Helium
+Subhalo: NSF/SmoothedElementAbundance/Hydrogen
+Subhalo: NSF/SmoothedElementAbundance/Iron
+Subhalo: NSF/SmoothedElementAbundance/Magnesium
+Subhalo: NSF/SmoothedElementAbundance/Neon
+Subhalo: NSF/SmoothedElementAbundance/Nitrogen
+Subhalo: NSF/SmoothedElementAbundance/Oxygen
+Subhalo: NSF/SmoothedElementAbundance/Silicon
+Subhalo: NSF/SmoothedMetallicity
+Subhalo: NSF/Spin
+Subhalo: NSF/ThermalEnergy
+Subhalo: NSF/TotalEnergy
+Subhalo: SF/ElementAbundance/Carbon
+Subhalo: SF/ElementAbundance/Helium
+Subhalo: SF/ElementAbundance/Hydrogen
+Subhalo: SF/ElementAbundance/Iron
+Subhalo: SF/ElementAbundance/Magnesium
+Subhalo: SF/ElementAbundance/Neon
+Subhalo: SF/ElementAbundance/Nitrogen
+Subhalo: SF/ElementAbundance/Oxygen
+Subhalo: SF/ElementAbundance/Silicon
+Subhalo: SF/IronFromSNIa
+Subhalo: SF/IronFromSNIaSmoothed
+Subhalo: SF/KineticEnergy
+Subhalo: SF/Mass, log
+Subhalo: SF/MassFromAGB, log
+Subhalo: SF/MassFromSNII, log
+Subhalo: SF/MassFromSNIa, log
+Subhalo: SF/MassWeightedEntropy, log
+Subhalo: SF/MassWeightedPotential
+Subhalo: SF/MassWeightedTemperature, log
+Subhalo: SF/Metallicity
+Subhalo: SF/MetalsFromAGB
+Subhalo: SF/MetalsFromSNII
+Subhalo: SF/MetalsFromSNIa
+Subhalo: SF/SFWeightedMetallicity
+Subhalo: SF/SmoothedElementAbundance/Carbon
+Subhalo: SF/SmoothedElementAbundance/Helium
+Subhalo: SF/SmoothedElementAbundance/Hydrogen
+Subhalo: SF/SmoothedElementAbundance/Iron
+Subhalo: SF/SmoothedElementAbundance/Magnesium
+Subhalo: SF/SmoothedElementAbundance/Neon
+Subhalo: SF/SmoothedElementAbundance/Nitrogen
+Subhalo: SF/SmoothedElementAbundance/Oxygen
+Subhalo: SF/SmoothedElementAbundance/Silicon
+Subhalo: SF/SmoothedMetallicity
+Subhalo: SF/SmoothedSFWeightedMetallicity
+Subhalo: SF/Spin
+Subhalo: SF/ThermalEnergy
+Subhalo: SF/TotalEnergy
+Subhalo: StarFormationRate
+Subhalo: Stars/ElementAbundance/Carbon
+Subhalo: Stars/ElementAbundance/Helium
+Subhalo: Stars/ElementAbundance/Hydrogen
+Subhalo: Stars/ElementAbundance/Iron
+Subhalo: Stars/ElementAbundance/Magnesium
+Subhalo: Stars/ElementAbundance/Neon
+Subhalo: Stars/ElementAbundance/Nitrogen
+Subhalo: Stars/ElementAbundance/Oxygen
+Subhalo: Stars/ElementAbundance/Silicon
+Subhalo: Stars/IronFromSNIa
+Subhalo: Stars/IronFromSNIaSmoothed
+Subhalo: Stars/KineticEnergy
+Subhalo: Stars/Mass, log
+Subhalo: Stars/MassFromAGB, log
+Subhalo: Stars/MassFromSNII, log
+Subhalo: Stars/MassFromSNIa, log
+Subhalo: Stars/MassWeightedPotential
+Subhalo: Stars/Metallicity
+Subhalo: Stars/MetalsFromAGB
+Subhalo: Stars/MetalsFromSNII
+Subhalo: Stars/MetalsFromSNIa
+Subhalo: Stars/SmoothedElementAbundance/Carbon
+Subhalo: Stars/SmoothedElementAbundance/Helium
+Subhalo: Stars/SmoothedElementAbundance/Hydrogen
+Subhalo: Stars/SmoothedElementAbundance/Iron
+Subhalo: Stars/SmoothedElementAbundance/Magnesium
+Subhalo: Stars/SmoothedElementAbundance/Neon
+Subhalo: Stars/SmoothedElementAbundance/Nitrogen
+Subhalo: Stars/SmoothedElementAbundance/Oxygen
+Subhalo: Stars/SmoothedElementAbundance/Silicon
+Subhalo: Stars/SmoothedMetallicity
+Subhalo: Stars/Spin
+Subhalo: Stars/TotalEnergy
+Subhalo: StellarInitialMass, log
+Subhalo: StellarVelDisp
+Subhalo: StellarVelDisp_HalfMassProjRad
+Subhalo: SubGroupNumber
+Subhalo: SubLength
+Subhalo: SubLengthType/PartType0
+Subhalo: SubLengthType/PartType1
+Subhalo: SubLengthType/PartType2
+Subhalo: SubLengthType/PartType3
+Subhalo: SubLengthType/PartType4
+Subhalo: SubLengthType/PartType5
+Subhalo: SubOffset
+Subhalo: ThermalEnergy
+Subhalo: TotalEnergy
+Subhalo: Velocity
+Subhalo: Vmax, log
+Subhalo: VmaxRadius, log
+Moment of inertia b/a for main projenitors stellar particles
+Moment of inertia c/a for main projenitors stellar particles
+The mass weight PDFs for the metalicity of stars in the main halo, averaged over all systems. Integral normalised to unity.
+The mass weight PDFs for the metalicity of stars in the main halo, calauclated seperately for each system. Integral normalised to unity.
+Cumulative satellite stellar mass function, using subfind bound stellar mass and all satellite within FOF group
+The insitu stellar fraction for the host, just looking at bound particles
+The mass weight PDFs for the metalicity of stars in the main halo, calauclated seperately for each system. Integral normalised to unity.
+The mass weight PDFs for the metalicity of stars in the main halo, averaged over all systems. Integral normalised to unity.
