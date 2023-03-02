@@ -266,7 +266,7 @@ class emulator:
         #         self.trained_sep[stat[i]]=False
 
     def load_stat(self,stat,verbose=True):
-
+        print(self.Guassian_proc.keys())
         #first check if statistic exists
         for i in self.Guassian_proc.keys():
             if stat == i:
@@ -440,16 +440,32 @@ class emulator:
 
         return(self.errors[stat])
 
-    def list_stats(self,stat=None):
+    def get_description(self,stat):
 
+        return(self.description[stat])
+
+    def list_stats(self,stat=None):
+        
         if stat==None:
             return(self.statistics)
 
-        else:
+        elif type(stat)==str:
             stats=[]
             for i in range(len(self.statistics)):
                 if stat.casefold() in self.statistics[i].casefold():
                     stats.append(self.statistics[i])
+            return(stats)
+
+        elif type(stat)==list:
+            stats=[]
+            for i in range(len(self.statistics)):
+                contains = np.zeros(len(stat),dtype=bool)
+                for j in range(len(stat)):
+                    contains[j] = stat[j].casefold() in self.statistics[i].casefold()
+
+                if np.all(contains):
+                    stats.append(self.statistics[i])
+
             return(stats)
 
 def main_proj(loc,tags):
