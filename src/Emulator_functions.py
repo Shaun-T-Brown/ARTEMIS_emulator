@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, WhiteKernel, Matern
 import dill
+import joblib
 import h5py as h5
 import eagle_IO.eagle_IO as E
 import os 
@@ -161,20 +162,11 @@ class emulator_build:
                 gpr[-1].fit(nodes_sample, dat)
 
         #now save the data and Guassian process
-        with open(self.emulator_filepath+statistic+tag+'.pickle', 'wb') as file:
-            dill.dump(gpr, file)
-
-        with open(self.emulator_filepath+statistic+tag+'_normalisation.pickle', 'wb') as file:
-            dill.dump(norms, file)
-
-        # with open(self.emulator_filepath+statistic+tag+'_shape.pickle', 'wb') as file:
-        #     dill.dump(shape, file)
-
-        with open(self.emulator_filepath+statistic+tag+'_x.pickle', 'wb') as file:
-            dill.dump(x, file)
-
-        with open(self.training_filepath+statistic+tag+'.pickle', 'wb') as file:
-            dill.dump(data, file)
+        joblib.dump(gpr,self.emulator_filepath+statistic+tag+'.joblib')
+        joblib.dump(gpr,self.emulator_filepath+statistic+tag+'_normalisation.joblib')
+        joblib.dump(gpr,self.emulator_filepath+statistic+tag+'_x.joblib')
+        joblib.dump(gpr,self.training_filepath+statistic+tag+'.joblib')
+        
 
 
     def test(self,data_test,stat,tag):
@@ -306,12 +298,11 @@ class emulator:
         self.x_data[stat]=[]
         
         for i in range(len(self.snapshots[stat])):
-            with open(self.loc+'Emulators/'+stat+'%03d.pickle'%self.snapshots[stat][i], 'rb') as j:
-                data = dill.load(j)
-            with open(self.loc+'Emulators/'+stat+'%03d_normalisation.pickle'%self.snapshots[stat][i], 'rb') as j:
-                norm = dill.load(j)
-            with open(self.loc+'Emulators/'+stat+'%03d_x.pickle'%self.snapshots[stat][i], 'rb') as j:
-                x_data = dill.load(j)
+            
+            data = joblib.load(self.loc+'Emulators/'+stat+'%03d.joblib'%self.snapshots[stat][i])
+            norm = joblib.load(self.loc+'Emulators/'+stat+'%03d_normalisation.joblib'%self.snapshots[stat][i])
+            x_data = joblib.load(self.loc+'Emulators/'+stat+'%03d_x.joblib'%self.snapshots[stat][i])
+            
 
             self.Guassian_proc[stat].append(data)
             self.normalisation[stat].append(norm)
@@ -319,9 +310,8 @@ class emulator:
 
             #check if errors have been calculated
             self.errors[stat]=[]
-            if os.path.exists(self.loc+'Training_data/'+stat+'%i_errors.pickle'%self.snapshots[stat][i]):
-                with open(self.loc+'Training_data/'+stat[i]+'%i_errors.pickle'%self.snapshots[stat][i], 'rb') as j:
-                    errors = dill.load(j)
+            if os.path.exists(self.loc+'Training_data/'+stat+'%i_errors.joblib'%self.snapshots[stat][i]):
+                errors = joblib.load(self.loc+'Training_data/'+stat[i]+'%i_errors.joblib'%self.snapshots[stat][i])
             else:
                 errors = None 
             self.errors[stat].append(errors)
@@ -738,7 +728,7 @@ def check_sim(halos,file_name,tag):
 
 if __name__=='__main__':
     sim_directory='/cosma7/data/dp004/dc-brow5/simulations/ARTEMIS/Latin_hyperube_2/'
-    halos=['halo_61','halo_32','halo_04']
+    halos=['halo_61']#,'halo_32','halo_04']
     L_cube=np.loadtxt('./Latin_hypercube_D6_N25_strength2_v2.txt')
     tests=np.loadtxt('./random_cube_2.txt')
 
@@ -801,10 +791,6 @@ if __name__=='__main__':
     for i in range(len(sub_keys)):
         prefix.append('Subhalo:')
     keys=list(fof_keys)+sub_keys
-
-    
-    prefix=[prefix[27],prefix[67]]
-    keys=[keys[67]]#for appeture mass
     
 
 
@@ -836,6 +822,9 @@ if __name__=='__main__':
             projen_fof[k][i,:]=projen_fof[k][i,:][::-1]
     
 
+    prefix=[prefix[27]]
+    keys=[keys[27]]#for appeture mass
+    
     for j in range(len(tags)):
         proj_exist=np.zeros(len(halos))
         data=[]
