@@ -9,6 +9,7 @@ import eagle_IO.eagle_IO as E
 import os 
 from matplotlib.colors import LogNorm
 from itertools import compress
+from pathlib import Path
 
 class emulator_build:
     def __init__(self,labels,L_cube,test):
@@ -162,10 +163,18 @@ class emulator_build:
                 gpr[-1].fit(nodes_sample, dat)
 
         #now save the data and Guassian process
-        joblib.dump(gpr,self.emulator_filepath+statistic+tag+'.joblib')
-        joblib.dump(gpr,self.emulator_filepath+statistic+tag+'_normalisation.joblib')
-        joblib.dump(gpr,self.emulator_filepath+statistic+tag+'_x.joblib')
-        joblib.dump(gpr,self.training_filepath+statistic+tag+'.joblib')
+        with open(self.emulator_filepath+statistic+tag+'.pickle', 'wb') as handle:
+            dill.dump(gpr, handle)
+
+        with open(self.emulator_filepath+statistic+tag+'_normalisation.pickle', 'wb') as handle:
+            dill.dump(norms, handle)
+
+        with open(self.emulator_filepath+statistic+tag+'_x.pickle', 'wb') as handle:
+            dill.dump(x, handle)
+
+        with open(self.training_filepath+statistic+tag+'.pickle', 'wb') as handle:
+            dill.dump(data, handle)
+
         
 
 
@@ -225,6 +234,10 @@ class emulator:
         self.snapshots={}
         self.description={}
         self.statistics=stat.copy()
+
+        #set up deatails that are fixed for this versinon of the emulator
+        self.ndims = 6
+        self.nodes = np.loadtxt(self.loc + 'Latin_hypercube_D6_N25_strength2_v2.txt')
         
         #load all descriptions
         for i in range(len(stat)):
@@ -257,6 +270,69 @@ class emulator:
         #     else:
         #         self.trained_sep[stat[i]]=False
 
+    def retrain(self,stat,train_seperataely=True):
+
+        num_snaps=30
+        for i in range(num_snaps):
+            tag = '%03d'%i
+            #check if file exists
+            path = self.loc+'Training_data/'+stat+tag+'.pickle'
+
+            if Path(path).exists() == False:
+                continue
+            
+
+            with open(path,'rb') as handle:
+                data = dill.load(handle)
+
+            
+            if train_seperataely==False:
+                #normalise data
+                norm=np.max(data)-np.min(data)
+                data_min=np.min(data)
+                if norm==0:
+                    norm=1.0
+                data=(data-data_min)/norm
+                norms=[norm,data_min]
+
+                #reshape array
+                data=np.reshape(data,(shape[0],-1))
+
+                #kernel if going to be an initial guess of width 0.5, and minimal noise 
+                kernel = 0.5**2*Matern(length_scale=np.ones(self.ndims)*0.5, length_scale_bounds=(1e-2, 1e2),nu=2.5)\
+                + WhiteKernel(noise_level=1e-2, noise_level_bounds=(1e-4, 1e2))
+
+                gpr = GaussianProcessRegressor(kernel=kernel,n_restarts_optimizer=100)
+                gpr.fit(self.nodes, data)
+
+            elif train_seperataely==True:
+                #flatten array
+                
+
+                num_stat=data.shape[1]
+                gpr=[]
+                norms=[]
+                for k in range(num_stat):
+                    dat=data[:,k]
+
+
+
+                    #kernel if going to be an initial guess of width 0.5, and minimal noise 
+                    kernel = 0.5**2*Matern(length_scale=np.ones(self.ndims)*0.5, length_scale_bounds=(1e-2, 1e2),nu=2.5)\
+                    + WhiteKernel(noise_level=1e-2, noise_level_bounds=(1e-4, 1e2))
+
+                    gpr.append( GaussianProcessRegressor(kernel=kernel,n_restarts_optimizer=100))
+                    gpr[-1].fit(self.nodes, dat)
+
+            #save new gpr
+            with open(self.loc+'Emulators/'+stat+tag+'.pickle', 'wb') as handle:
+                dill.dump(gpr, handle)
+
+
+        return
+
+
+
     def load_stat(self,stat,verbose=True):
         print(self.Guassian_proc.keys())
         #first check if statistic exists
@@ -284,7 +360,7 @@ class emulator:
         self.snapshots[stat] = []
         for i in range(len(self.redshift_all)):
             #print(self.loc+'Emulators/'+stat+'%03d.pickle'%i)
-            redshift_calc[i] = os.path.exists(self.loc+'Emulators/'+stat+'%03d.pickle'%i)
+            redshift_calc[i] = os.path.exists(self.loc+'Emulators/'+stat+'%03d.joblib'%i)
             
             if redshift_calc[i] == True:
                 self.snapshots[stat].append(i)
