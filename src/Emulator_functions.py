@@ -310,11 +310,18 @@ class emulator:
                 
 
                 num_stat=data.shape[1]
+                
                 gpr=[]
                 norms=[]
                 for k in range(num_stat):
                     dat=data[:,k]
 
+                    norm=np.max(dat)-np.min(dat)
+                    data_min=np.min(dat)
+                    if norm==0:
+                        norm=1.0
+                    dat=(dat-data_min)/norm
+                    norms.append([norm,data_min])
 
 
                     #kernel if going to be an initial guess of width 0.5, and minimal noise 
@@ -324,17 +331,23 @@ class emulator:
                     gpr.append( GaussianProcessRegressor(kernel=kernel,n_restarts_optimizer=100))
                     gpr[-1].fit(self.nodes, dat)
 
+            
             #save new gpr
+            os.remove(self.loc+'Emulators/'+stat+tag+'.pickle')
             with open(self.loc+'Emulators/'+stat+tag+'.pickle', 'wb') as handle:
                 dill.dump(gpr, handle)
 
+            os.remove(self.loc+'Emulators/'+stat+tag+'_normalisation.pickle')
+            with open(self.loc+'Emulators/'+stat+tag+'_normalisation.pickle', 'wb') as handle:
+                dill.dump(norms, handle)
+            
 
         return
 
 
 
     def load_stat(self,stat,verbose=True):
-        print(self.Guassian_proc.keys())
+        
         #first check if statistic exists
         for i in self.Guassian_proc.keys():
             if stat == i:
@@ -359,15 +372,14 @@ class emulator:
         redshift_calc = np.zeros(len(self.redshift_all),dtype=bool)
         self.snapshots[stat] = []
         for i in range(len(self.redshift_all)):
-            #print(self.loc+'Emulators/'+stat+'%03d.pickle'%i)
-            redshift_calc[i] = os.path.exists(self.loc+'Emulators/'+stat+'%03d.joblib'%i)
+            
+            redshift_calc[i] = os.path.exists(self.loc+'Emulators/'+stat+'%03d.pickle'%i)
             
             if redshift_calc[i] == True:
                 self.snapshots[stat].append(i)
 
         self.redshifts[stat] = self.redshift_all[redshift_calc]
 
-        
         # load data for all available redshifts
         self.Guassian_proc[stat]=[]
         self.normalisation[stat]=[]
@@ -375,9 +387,14 @@ class emulator:
         
         for i in range(len(self.snapshots[stat])):
             
-            data = joblib.load(self.loc+'Emulators/'+stat+'%03d.joblib'%self.snapshots[stat][i])
-            norm = joblib.load(self.loc+'Emulators/'+stat+'%03d_normalisation.joblib'%self.snapshots[stat][i])
-            x_data = joblib.load(self.loc+'Emulators/'+stat+'%03d_x.joblib'%self.snapshots[stat][i])
+            
+            with open(self.loc+'Emulators/'+stat+'%03d.pickle'%self.snapshots[stat][i], 'rb') as j:
+                data = dill.load(j)
+            with open(self.loc+'Emulators/'+stat+'%03d_normalisation.pickle'%self.snapshots[stat][i], 'rb') as j:
+                norm = dill.load(j)
+            with open(self.loc+'Emulators/'+stat+'%03d_x.pickle'%self.snapshots[stat][i], 'rb') as j:
+                x_data = dill.load(j)
+
             
 
             self.Guassian_proc[stat].append(data)
