@@ -161,7 +161,7 @@ cython_debug/
 
 
 #Extra specific stuff
-./src/Emulators/*
-!./src/Emulators/*_shape.pickle
-!./src/Emulators/*_x.pickle
-!./src/Emulators/*_normalisation.pickle
+src/Emulators/*
+!src/Emulators/*_shape.pickle
+!src/Emulators/*_x.pickle
+!src/Emulators/*_normalisation.pickle
