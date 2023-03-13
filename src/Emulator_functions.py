@@ -10,6 +10,7 @@ import os
 from matplotlib.colors import LogNorm
 from itertools import compress
 from pathlib import Path
+from glob import glob
 
 class emulator_build:
     def __init__(self,labels,L_cube,test):
@@ -367,8 +368,13 @@ class emulator:
                 print('Statistic does not exist')
             return(1)
 
-
-        #check wich redshifts are present
+        #check if statistic is trained
+        trained = 0
+        for i in range(len(self.redshift_all)):
+            trained += os.path.exists(self.loc+'Emulators/'+stat+'%03d.pickle'%i)
+        print(trained)
+        exit()
+        #check which redshifts are present
         redshift_calc = np.zeros(len(self.redshift_all),dtype=bool)
         self.snapshots[stat] = []
         for i in range(len(self.redshift_all)):
