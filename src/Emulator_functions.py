@@ -3,13 +3,13 @@ import matplotlib.pyplot as plt
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, WhiteKernel, Matern
 import dill
-import joblib
-import h5py as h5
 import eagle_IO.eagle_IO as E
 import os 
 from matplotlib.colors import LogNorm
 from itertools import compress
 from pathlib import Path
+from glob import glob
+import h5py as h5
 
 class emulator_build:
     def __init__(self,labels,L_cube,test):
@@ -310,11 +310,18 @@ class emulator:
                 
 
                 num_stat=data.shape[1]
+                
                 gpr=[]
                 norms=[]
                 for k in range(num_stat):
                     dat=data[:,k]
 
+                    norm=np.max(dat)-np.min(dat)
+                    data_min=np.min(dat)
+                    if norm==0:
+                        norm=1.0
+                    dat=(dat-data_min)/norm
+                    norms.append([norm,data_min])
 
 
                     #kernel if going to be an initial guess of width 0.5, and minimal noise 
@@ -324,17 +331,21 @@ class emulator:
                     gpr.append( GaussianProcessRegressor(kernel=kernel,n_restarts_optimizer=100))
                     gpr[-1].fit(self.nodes, dat)
 
+            
             #save new gpr
             with open(self.loc+'Emulators/'+stat+tag+'.pickle', 'wb') as handle:
                 dill.dump(gpr, handle)
-
+  
+            with open(self.loc+'Emulators/'+stat+tag+'_normalisation.pickle', 'wb') as handle:
+                dill.dump(norms, handle)
+            
 
         return
 
 
 
     def load_stat(self,stat,verbose=True):
-        print(self.Guassian_proc.keys())
+        
         #first check if statistic exists
         for i in self.Guassian_proc.keys():
             if stat == i:
@@ -354,20 +365,28 @@ class emulator:
                 print('Statistic does not exist')
             return(1)
 
+        #check if statistic is trained
+        trained = 0
+        for i in range(len(self.redshift_all)):
+            trained += os.path.exists(self.loc+'Emulators/'+stat+'%03d.pickle'%i)
 
-        #check wich redshifts are present
+        #retrain if needed
+        if trained == 0:
+            print('Statistic not yet trained. Building emulator.')
+            self.retrain(stat)
+        
+        #check which redshifts are present
         redshift_calc = np.zeros(len(self.redshift_all),dtype=bool)
         self.snapshots[stat] = []
         for i in range(len(self.redshift_all)):
-            #print(self.loc+'Emulators/'+stat+'%03d.pickle'%i)
-            redshift_calc[i] = os.path.exists(self.loc+'Emulators/'+stat+'%03d.joblib'%i)
+            
+            redshift_calc[i] = os.path.exists(self.loc+'Emulators/'+stat+'%03d.pickle'%i)
             
             if redshift_calc[i] == True:
                 self.snapshots[stat].append(i)
 
         self.redshifts[stat] = self.redshift_all[redshift_calc]
 
-        
         # load data for all available redshifts
         self.Guassian_proc[stat]=[]
         self.normalisation[stat]=[]
@@ -375,9 +394,14 @@ class emulator:
         
         for i in range(len(self.snapshots[stat])):
             
-            data = joblib.load(self.loc+'Emulators/'+stat+'%03d.pickle'%self.snapshots[stat][i])
-            norm = joblib.load(self.loc+'Emulators/'+stat+'%03d_normalisation.pickle'%self.snapshots[stat][i])
-            x_data = joblib.load(self.loc+'Emulators/'+stat+'%03d_x.pickle'%self.snapshots[stat][i])
+            
+            with open(self.loc+'Emulators/'+stat+'%03d.pickle'%self.snapshots[stat][i], 'rb') as j:
+                data = dill.load(j)
+            with open(self.loc+'Emulators/'+stat+'%03d_normalisation.pickle'%self.snapshots[stat][i], 'rb') as j:
+                norm = dill.load(j)
+            with open(self.loc+'Emulators/'+stat+'%03d_x.pickle'%self.snapshots[stat][i], 'rb') as j:
+                x_data = dill.load(j)
+
             
 
             self.Guassian_proc[stat].append(data)
@@ -386,8 +410,8 @@ class emulator:
 
             #check if errors have been calculated
             self.errors[stat]=[]
-            if os.path.exists(self.loc+'Training_data/'+stat+'%i_errors.pickle'%self.snapshots[stat][i]):
-                errors = joblib.load(self.loc+'Training_data/'+stat[i]+'%i_errors.pickle'%self.snapshots[stat][i])
+            if os.path.exists(self.loc+'Training_data/'+stat+'%i_errors.joblib'%self.snapshots[stat][i]):
+                errors = joblib.load(self.loc+'Training_data/'+stat[i]+'%i_errors.joblib'%self.snapshots[stat][i])
             else:
                 errors = None 
             self.errors[stat].append(errors)
@@ -804,7 +828,7 @@ def check_sim(halos,file_name,tag):
 
 if __name__=='__main__':
     sim_directory='/cosma7/data/dp004/dc-brow5/simulations/ARTEMIS/Latin_hyperube_2/'
-    halos=['halo_61','halo_32','halo_04']
+    halos=['halo_61']#,'halo_32','halo_04']
     L_cube=np.loadtxt('./Latin_hypercube_D6_N25_strength2_v2.txt')
     tests=np.loadtxt('./random_cube_2.txt')
 
