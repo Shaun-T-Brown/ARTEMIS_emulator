@@ -1,0 +1,4 @@
+# M_200c from DM only sim, for halor 61,32,4 (respecticely)
+5.68054e+11
+9.18409e+11
+1.32058e+12

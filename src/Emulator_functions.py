@@ -375,9 +375,9 @@ class emulator:
         
         for i in range(len(self.snapshots[stat])):
             
-            data = joblib.load(self.loc+'Emulators/'+stat+'%03d.joblib'%self.snapshots[stat][i])
-            norm = joblib.load(self.loc+'Emulators/'+stat+'%03d_normalisation.joblib'%self.snapshots[stat][i])
-            x_data = joblib.load(self.loc+'Emulators/'+stat+'%03d_x.joblib'%self.snapshots[stat][i])
+            data = joblib.load(self.loc+'Emulators/'+stat+'%03d.pickle'%self.snapshots[stat][i])
+            norm = joblib.load(self.loc+'Emulators/'+stat+'%03d_normalisation.pickle'%self.snapshots[stat][i])
+            x_data = joblib.load(self.loc+'Emulators/'+stat+'%03d_x.pickle'%self.snapshots[stat][i])
             
 
             self.Guassian_proc[stat].append(data)
@@ -386,8 +386,8 @@ class emulator:
 
             #check if errors have been calculated
             self.errors[stat]=[]
-            if os.path.exists(self.loc+'Training_data/'+stat+'%i_errors.joblib'%self.snapshots[stat][i]):
-                errors = joblib.load(self.loc+'Training_data/'+stat[i]+'%i_errors.joblib'%self.snapshots[stat][i])
+            if os.path.exists(self.loc+'Training_data/'+stat+'%i_errors.pickle'%self.snapshots[stat][i]):
+                errors = joblib.load(self.loc+'Training_data/'+stat[i]+'%i_errors.pickle'%self.snapshots[stat][i])
             else:
                 errors = None 
             self.errors[stat].append(errors)
@@ -804,7 +804,7 @@ def check_sim(halos,file_name,tag):
 
 if __name__=='__main__':
     sim_directory='/cosma7/data/dp004/dc-brow5/simulations/ARTEMIS/Latin_hyperube_2/'
-    halos=['halo_61']#,'halo_32','halo_04']
+    halos=['halo_61','halo_32','halo_04']
     L_cube=np.loadtxt('./Latin_hypercube_D6_N25_strength2_v2.txt')
     tests=np.loadtxt('./random_cube_2.txt')
 
