@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#random extra output files to ignore
+out*.txt
+Figures/
+
 # C extensions
 *.so
 
