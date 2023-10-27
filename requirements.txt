@@ -1,0 +1,7 @@
+numpy
+dill
+h5py
+matplotlib
+scipy
+scikit-learn >= 1.1.2
+scikit-image
