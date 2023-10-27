@@ -269,3 +269,7 @@ Sat_stellar_mass_func
 Insitu_fraction
 Time_distribution_individual
 Time_distribution
+Age_met_median
+Age_met_upper
+Age_met_lower
+Sat_stellar_mass_func_halo61

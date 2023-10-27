@@ -29,8 +29,32 @@ def sph_smooth(DM_mass_bins,DM_mass,host_halo,h=0.5):
             host_frac[i]=np.sum(weight[dist<=1]*host_halo[dist<=1])/np.sum(weight[dist<=1])
         return(host_frac)
 
+def satellite_count_stellar(loc,sim_names,tag):
+
+        part_mass=2.23*10**4
+        part_mass_dm=1.17*10**5
+        M_bins=np.logspace(np.log10(part_mass),9.5,10)
+        M_bins_dm=np.logspace(np.log10(part_mass_dm),11,10)
+
+        count=np.zeros((len(sim_names),len(M_bins)))
+        count_dm=np.zeros((len(sim_names),len(M_bins)))
+        for j in range(len(sim_names)):
+            print(sim_names[j])
+            group_num=E.read_array("SUBFIND",loc+sim_names[j]+'/data',tag,"Subhalo/GroupNumber",noH=False)-1
+            stellar_mass=E.read_array("SUBFIND",loc+sim_names[j]+'/data',tag,"Subhalo/MassType",noH=False)[:,4]*10**10
+            dm_mass=E.read_array("SUBFIND",loc+sim_names[j]+'/data',tag,"Subhalo/MassType",noH=False)[:,1]*10**10
+            stellar_mass=stellar_mass[group_num==0][1:] #discount central
+            dm_mass=dm_mass[group_num==0][1:]
+
+            
+            for i in range(len(M_bins)):
+                count[j,i]=np.sum(stellar_mass>M_bins[i])
+                count_dm[j,i]=np.sum(dm_mass>M_bins_dm[i])
+
+        return(count,count_dm,M_bins,M_bins_dm)
+        
 if __name__=='__main__':
-    sim_directory='/cosma7/data/dp004/dc-brow5/simulations/ARTEMIS/Latin_hyperube_2/'
+    sim_directory='/cosma8/data/dp203/dc-brow5/simulations_cosma6/simulations/ARTEMIS/HYDRO/Latin_hypercube_2/'
     halos=['halo_61','halo_32']
     L_cube=np.loadtxt('./Latin_hypercube_D6_N25_strength2_v2.txt')
     tests=np.loadtxt('./random_cube_2.txt')
@@ -317,29 +341,6 @@ if __name__=='__main__':
         return(M_st_sample)
 
     #generate training data and train
-    def satellite_count_stellar(loc,sim_names,tag):
-
-        part_mass=2.23*10**4
-        part_mass_dm=1.17*10**5
-        M_bins=np.logspace(np.log10(part_mass),9.5,10)
-        M_bins_dm=np.logspace(np.log10(part_mass_dm),11,10)
-
-        count=np.zeros((len(sim_names),len(M_bins)))
-        count_dm=np.zeros((len(sim_names),len(M_bins)))
-        for j in range(len(sim_names)):
-            print(sim_names[j])
-            group_num=E.read_array("SUBFIND",loc+sim_names[j]+'/data',tag,"Subhalo/GroupNumber",noH=False)-1
-            stellar_mass=E.read_array("SUBFIND",loc+sim_names[j]+'/data',tag,"Subhalo/MassType",noH=False)[:,4]*10**10
-            dm_mass=E.read_array("SUBFIND",loc+sim_names[j]+'/data',tag,"Subhalo/MassType",noH=False)[:,1]*10**10
-            stellar_mass=stellar_mass[group_num==0][1:] #discount central
-            dm_mass=dm_mass[group_num==0][1:]
-
-            
-            for i in range(len(M_bins)):
-                count[j,i]=np.sum(stellar_mass>M_bins[i])
-                count_dm[j,i]=np.sum(dm_mass>M_bins_dm[i])
-
-        return(count,count_dm,M_bins,M_bins_dm)
 
     #########################################################################
     #train stellar mass function
@@ -354,14 +355,17 @@ if __name__=='__main__':
     counts1,counts_dm1,M_bins,M_bins_dm=satellite_count_stellar(sim_directory+halos[1]+'/',file_name,snap_name)
     counts_test1,counts_dm_test1,_,_=satellite_count_stellar(sim_directory+halos[1]+'/',file_name_test,snap_name)
     
-    counts=(counts+counts1)/2; counts_dm=(counts_dm+counts_dm1)/2
+    counts_av=(counts+counts1)/2; counts_dm=(counts_dm+counts_dm1)/2
     counts_test=(counts_test+counts_test1)/2; counts_dm_test=(counts_dm_test+counts_dm_test1)/2
     
     #build emulators and test
     stat='Sat_stellar_mass_func'
     description='Cumulative satellite stellar mass function, using subfind bound stellar mass and all satellite within FOF group'
+    em.train(counts_av,'029',M_bins,stat, description,replace=True,train_seperataely=True)
+    
+    stat='Sat_stellar_mass_func_halo61'
+    description='Cumulative satellite stellar mass function, using subfind bound stellar mass and all satellite within FOF group'
     em.train(counts,'029',M_bins,stat, description,replace=True,train_seperataely=True)
-    #deg_freedom,chi22,frac_err,error=em.test(counts_test,stat)
 
     exit()
     

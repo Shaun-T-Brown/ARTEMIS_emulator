@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, WhiteKernel, Matern
 import dill
-import eagle_IO.eagle_IO as E
 import os 
 from matplotlib.colors import LogNorm
 from itertools import compress
@@ -224,7 +223,6 @@ class emulator:
         with open(self.loc+'statistic_descriptions.txt','r') as f:
             desc = f.read().splitlines() 
 
-
         self.Guassian_proc={}
         self.normalisation={}
         self.trained_sep={}
@@ -270,6 +268,48 @@ class emulator:
         #     else:
         #         self.trained_sep[stat[i]]=False
 
+    def get_parameter_names(self): #return the names of the statistics
+        names = [
+            'WDM mass, m_DM', 
+            'A, fmin=A*fmax (stellar feedback)', 
+            'Max stellar feedack efficiency, fmax (stellar feedback)',
+            'Star formation threshold, n^*_H',
+            'Stellar feedback transition scale, rho_H0 (stellar feedback)', 
+            'Reionisation redshift, z'
+            ]
+
+        return(names)
+
+    def get_parameter_labels(self): #return the names of the statistics
+        labels=[
+            '$m_{\\rm{DM}}$',
+            '$A$',
+            '$\\log f_{\\rm{max}}$',
+            '$\\log n_{\\rm{H,0}}^{\\ast}$',
+            '$\\log \\rho_{\\rm{H,0}}$',
+            '$z_{\\rm{reio}}$'
+        ]
+        return(labels)
+
+    def get_foldername(self):
+        nodes_eagle = rescale(self.nodes,return_eagle=True)[1]
+
+        file_name=[]
+        for i in range(len(nodes_eagle)):
+            file_name.append('WDMm%.2f_fmin%.2f_fmax%.2f_starthresh%.2f_nH%.2f_reion%.2f'%(nodes_eagle[i,0],nodes_eagle[i,1],nodes_eagle[i,2],nodes_eagle[i,3],nodes_eagle[i,4],nodes_eagle[i,5]))
+        
+        
+        return(file_name)
+
+    def paramter_sampling(self, normalised=True):
+
+        if normalised==True:
+            return(self.nodes)
+        elif normalised==False:
+            sampling = rescale(self.nodes,return_eagle=False,normalised=True)
+            return(sampling)
+
+
     def retrain(self,stat,train_seperataely=True):
 
         num_snaps=30
@@ -306,7 +346,7 @@ class emulator:
                 gpr.fit(self.nodes, data)
 
             elif train_seperataely==True:
-                #flatten array
+                
                 
 
                 num_stat=data.shape[1]
@@ -332,7 +372,7 @@ class emulator:
                     gpr[-1].fit(self.nodes, dat)
 
             
-            #save new gpr
+            #save new gpr and normalisation
             with open(self.loc+'Emulators/'+stat+tag+'.pickle', 'wb') as handle:
                 dill.dump(gpr, handle)
   
@@ -422,13 +462,13 @@ class emulator:
         else:
             self.trained_sep[stat]=False
 
-        return(0)
+        return()
 
             
 
 
 
-    def predict(self,stat,params,redshift,return_std=False,return_x=False,normalised=True,verbose=True):
+    def predict(self,stat,params,redshift,return_std=False,return_scatter=False,return_x=False,normalised=True,verbose=True):
         
         #load data
         load_correct=self.load_stat(stat,verbose=verbose)
@@ -488,7 +528,8 @@ class emulator:
         #print(self.trained_sep[stat])
         #print(data.shape)
 
-        std=np.empty((len(redshift_sample),len(params),stat_len))
+        scatter = np.zeros((len(redshift_sample),stat_len))
+        std = np.empty((len(redshift_sample),len(params),stat_len))
         for i in range(len(index)):
             #need to consider reshaping data if necesary
             if self.trained_sep[stat]==False:
@@ -505,24 +546,28 @@ class emulator:
             else: 
                 num_stat=len(self.Guassian_proc[stat][index[i]])
                 for j in range(num_stat):
+                    scatter_norm = self.Guassian_proc[stat][index[i]][j].kernel_.k2.noise_level
                     dat,sigma=self.Guassian_proc[stat][index[i]][j].predict(params,return_std=True)
                     data[i,:,j]=(dat*self.normalisation[stat][index[i]][j][0]+self.normalisation[stat][index[i]][j][1])
                     std[i,:,j]=(sigma*self.normalisation[stat][index[i]][j][0])
-
+                    scatter[i,j] = scatter_norm*self.normalisation[stat][index[i]][j][0]
         #squeeze arrays to simplify
-        data=np.squeeze(data)
-        std=np.squeeze(std)
-        redshift_sample=np.squeeze(redshift_sample)
+        data = np.squeeze(data)
+        std = np.squeeze(std)
+        scatter = np.squeeze(scatter)
+        redshift_sample = np.squeeze(redshift_sample)
 
 
         #deal with what data to return
-        ret=(data,redshift_sample)
+        ret = (data,redshift_sample)
         if return_std==True:
-            ret=ret+(std,)
+            ret = ret + (std,)
         
+        if return_scatter==True:
+            ret = ret + (scatter,)
         #this last step assumes 'x data' is same at all redshifts
         if return_x==True:
-            ret=ret+(self.x_data[stat][0],)
+            ret = ret + (self.x_data[stat][0],)
 
         return(ret)
 
@@ -577,9 +622,9 @@ def main_proj(loc,tags):
     sub_id[-1]=0
     return(sub_id,group_id)
 
-def main_proj_corrections(loc,num_snaps,sub_id):
+def main_proj_corrections(loc,num_snaps,sub_id,merger_folder = 'merger_trees_new'):
     
-    h=h5.File(loc+'/merger_trees_new/tree_029.0.hdf5','r')
+    h=h5.File(loc+'/'+merger_folder+'/tree_029.0.hdf5','r')
 
     ID=np.array(h['haloTrees/nodeIndex'])
     desc_ind=np.array(h['haloTrees/descendantIndex'])
@@ -827,8 +872,10 @@ def check_sim(halos,file_name,tag):
     return(exist)
 
 if __name__=='__main__':
+    import eagle_IO.eagle_IO as E
+    
     sim_directory='/cosma7/data/dp004/dc-brow5/simulations/ARTEMIS/Latin_hyperube_2/'
-    halos=['halo_61']#,'halo_32','halo_04']
+    halos=['halo_61','halo_32','halo_04']
     L_cube=np.loadtxt('./Latin_hypercube_D6_N25_strength2_v2.txt')
     tests=np.loadtxt('./random_cube_2.txt')
 
@@ -921,9 +968,8 @@ if __name__=='__main__':
             projen_sub[k][i,:]=projen_sub[k][i,:][::-1]
             projen_fof[k][i,:]=projen_fof[k][i,:][::-1]
     
-
-    prefix=[prefix[27]]
-    keys=[keys[27]]#for appeture mass
+    #prefix=[prefix[27]]
+    #keys=[keys[27]]#for appeture mass
     
     for j in range(len(tags)):
         proj_exist=np.zeros(len(halos))

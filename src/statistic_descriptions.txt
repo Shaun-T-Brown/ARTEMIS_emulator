@@ -269,3 +269,7 @@ Cumulative satellite stellar mass function, using subfind bound stellar mass and
 The insitu stellar fraction for the host, just looking at bound particles
 The mass weight PDFs for the metalicity of stars in the main halo, calauclated seperately for each system. Integral normalised to unity.
 The mass weight PDFs for the metalicity of stars in the main halo, averaged over all systems. Integral normalised to unity.
+The median stellat metallicity age relation.
+The 84 percentile of the metallicity age relation.
+The 16 percentile of the metallicity age relation.
+Cumulative satellite stellar mass function, using subfind bound stellar mass and all satellite within FOF group

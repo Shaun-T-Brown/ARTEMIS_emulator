@@ -10,7 +10,7 @@ import os
 
 class corner_plot:
 
-    def __init__(self,n_dim,labels):
+    def __init__(self,n_dim,labels=None):
 
         #load interpolation tables for edge correction
         path = os.path.realpath(__file__).split('/')
@@ -22,7 +22,14 @@ class corner_plot:
             self.precompute = pickle.load(file)
 
         #set up figure and axis
-        self.labels=labels
+        if labels==None:
+            lab = []
+            for i in range(n_dim):
+                lab.append(' ')
+            self.labels=lab
+        else:
+            self.labels = labels
+
         self.n_dims = n_dim
         self.fig = plt.figure()
         self.gs = gridspec.GridSpec(ncols=n_dim, nrows=n_dim, figure=self.fig,wspace=0.0, hspace=0.0)
@@ -33,14 +40,15 @@ class corner_plot:
                 self.axes[i].append(self.fig.add_subplot(self.gs[i,j]))
 
                 #remove y ticks for 1d projection and add labels
-                if i==0:
+                if i==j:
                     self.axes[i][j].set_yticks([])
+                    self.axes[i][j].set_xticks(ticks = self.axes[i][j].get_xticks(),labels='')
+                    self.axes[i][j].xaxis.set_ticks_position('bottom')
 
-                if i!=n_dim-1:
-                    self.axes[i][j].set_xticks([])
 
-                if j!=0:
-                    self.axes[i][j].set_yticks([])
+                if i!=j:
+                    self.axes[i][j].set_yticks(ticks = self.axes[i][j].get_yticks(),labels='')
+                    self.axes[i][j].set_xticks(ticks = self.axes[i][j].get_xticks(),labels='')
 
                 if (j==0) & (i>0):
                     self.axes[i][j].set_ylabel(labels[i])
@@ -52,9 +60,11 @@ class corner_plot:
     def tick_update(self,tick_loc,tick_label):
         for i in range(self.n_dims):
             for j in range(i+1):
+                self.axes[i][j].xaxis.set_ticks(tick_loc[j],'')
+                self.axes[i][j].yaxis.set_ticks(tick_loc[j],'')
                 if (j==0) & (i>0):
+                    print(i,j)
                     self.axes[i][j].yaxis.set_ticks(tick_loc[i],tick_label[i])
-
                 if (i==self.n_dims-1):
                     self.axes[i][j].xaxis.set_ticks(tick_loc[j],tick_label[j])
 
@@ -82,6 +92,7 @@ class corner_plot:
 
                 if i==j:
                     ylim = self.axes[i][j].get_ylim()
+                    diff = ylim[1]-ylim[0]
                     self.axes[i][j].plot(np.ones(2)*data[i],ylim,**kwargs)
 
                 else:
@@ -337,11 +348,12 @@ class corner_plot:
     def scatter(self,data,**kwargs):
 
         for i in range(self.n_dims):
+            self.axes[i][i].hist(data[:,i],color='black',histtype='step',bins=5)
             for j in range(i):
                 if i==j:
                     continue
-
-                self.axes[i][j].plot(data[:,i],data[:,j],'o',**kwargs)
+                else:
+                    self.axes[i][j].scatter(data[:,j],data[:,i],**kwargs)
 
         return
 

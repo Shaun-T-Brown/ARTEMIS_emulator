@@ -4,7 +4,7 @@ import h5py as h5
 from Emulator_functions import emulator_build
 
 
-sim_directory='/cosma7/data/dp004/dc-brow5/simulations/ARTEMIS/Latin_hyperube_2/'
+sim_directory='/cosma8/data/dp203/dc-brow5/simulations_cosma6/simulations/ARTEMIS/HYDRO/Latin_hypercube_2/'
 L_cube=np.loadtxt('./Latin_hypercube_D6_N25_strength2_v2.txt')
 tests=np.loadtxt('./random_cube_2.txt')
 
@@ -54,13 +54,37 @@ def most_massive_branch(loc):
 
     return
 
-for i in range(len(halos)):
-    for j in range(len(file_name)):
+#loop for all haloes run
+# for i in range(len(halos)):
+#     for j in range(len(file_name)):
 
-        loc = sim_directory +'/'+halos[i]+'/'+file_name[j]+'/data/merger_trees_new/tree_029.0.hdf5'
+#         loc = sim_directory +'/'+halos[i]+'/'+file_name[j]+'/data/merger_trees_new/tree_029.0.hdf5'
 
-        print(loc)
+#         print(loc)
 
-        most_massive_branch(loc)
+#         most_massive_branch(loc)
+
+#loop for all haloes run
+# for i in range(len(halos)):
+#     for j in range(len(file_name_test)):
+
+#         loc = sim_directory +'/'+halos[i]+'/'+file_name_test[j]+'/data/merger_trees_new/tree_029.0.hdf5'
+
+#         print(loc)
+#         try:
+#             most_massive_branch(loc)
+#         except:
+#             print('Failed')
+#             pass
 
 
+# exit()
+#loop for all rerun haloes
+loc = '/cosma7/data/dp004/dc-brow5/simulations/ARTEMIS/Rerun/halo_61/'
+run_num = [3,4,5,6,7,9]
+run_num = [1,2]
+
+for i in range(len(run_num)):
+    loc2 = loc+'Run_%d/data/merger_trees/tree_029.0.hdf5'%run_num[i]
+    print(loc2)
+    most_massive_branch(loc2)
