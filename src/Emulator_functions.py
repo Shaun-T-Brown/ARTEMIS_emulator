@@ -12,6 +12,14 @@ import h5py as h5
 
 class emulator_build:
     def __init__(self,labels,L_cube,test):
+
+        #get location of emulator functions
+        file_path=os.path.realpath(__file__).split('/')
+        self.loc=''
+        for i in range(len(file_path)-1):
+            self.loc=self.loc+'/'+file_path[i]
+        self.loc=self.loc+'/'
+
         #provide the hypercube sampling used, assume limits between 0 and 1
         self.nodes = L_cube
         self.nodes_test = test
@@ -22,8 +30,8 @@ class emulator_build:
 
         self.paramter = labels
 
-        self.training_filepath = './Training_data/'
-        self.emulator_filepath = './Emulators/'
+        self.training_filepath = self.loc + '/Training_data/'
+        self.emulator_filepath = self.loc + '/Emulators/'
 
 
     def get_filename(self):
@@ -43,7 +51,6 @@ class emulator_build:
 
         #data can be an ND array, but first dimension must be the sampling of the 
         #L_cube
-
         #check that array saixe if appropriate
 
         if type(data)==np.ndarray: #if not numpy array assume list for seperate sampling
@@ -53,9 +60,9 @@ class emulator_build:
                 exit()
 
         #deal with the list of statistics and their descriptions
-        with open('statistics.txt','r') as f:
+        with open(self.loc + '/statistics.txt','r') as f:
             stat = f.readlines()
-        with open('statistic_descriptions.txt','r') as f:
+        with open(self.loc + '/statistic_descriptions.txt','r') as f:
             desc = f.readlines()
 
         
@@ -67,21 +74,21 @@ class emulator_build:
                 break
         if statistic_exist==True and replace==False:
             print('Statistic already exists, set replace=True if you want to overwrite')
-            exit() #need to ypdate to a warning
+            exit() #need to update to a warning
 
         if statistic_exist==True and replace==True:
             print('Statistic exists, overwriting!')
 
         #add statistic to list if it doesn't already exist
         if statistic_exist==False:
-            with open('statistics.txt', 'a') as myfile:
+            with open(self.loc + '/statistics.txt', 'a') as myfile:
                 myfile.write(statistic+'\n')
-            with open('statistic_descriptions.txt', 'a') as myfile:
+            with open(self.loc + '/statistic_descriptions.txt', 'a') as myfile:
                 myfile.write(description+'\n')
         #update description
         if statistic_exist==True:
             desc[stat_index]=description+'\n'
-            with open('statistic_descriptions.txt', 'w') as f:
+            with open(self.loc + '/statistic_descriptions.txt', 'w') as f:
                 for line in desc:
                     f.write(f"{line}")
         
